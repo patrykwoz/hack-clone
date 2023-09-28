@@ -18,6 +18,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+
   <title>Hack or Snooze</title>
   <link
       rel="stylesheet"
@@ -37,6 +39,14 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+  <div class="main-nav-links hidden">
+    <span>|</span>
+    <a href="#" class="nav-link" id="nav-new-story">new story</a>
+    <span>|</span>
+    <a href="#" class="nav-link" id="nav-favorites">favorites</a>
+    <span>|</span>
+    <a href="#" class="nav-link" id="nav-my-stories">my stories</a>
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
@@ -46,6 +56,28 @@
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
+  <!-- Submit story form -->
+  <form 
+  action="#"
+  id="submit-story-form"
+  class="submit-story-form hidden"
+  method="post"
+  >
+  <h4>Submit New Story</h4>
+  <div class="submit-story-input">
+    <label for="story-author">author</label>
+    <input type="text" name="" id="story-author" placeholder="author name">
+  </div>
+  <div class="submit-story-input">
+    <label for="story-title">title</label>
+    <input type="text" name="" id="story-title" placeholder="story title">
+  </div>
+  <div class="submit-story-input">
+    <label for="story-title">url</label>
+    <input type="url" id="story-url" placeholder="story url">
+  </div>
+  <button type="submit">submit</button>
+  </form>
 
   <!-- loading message (removed by JS after stories loaded) -->
   <div id="stories-loading-msg">Loading&hellip;</div>

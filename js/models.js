@@ -24,11 +24,18 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    let hostName = this.url.includes('www.') ? this.url.split('www.')[1] : this.url.split('//')[1];
+    return removeTrailingSlash(hostName); 
   }
 }
 
+
+function removeTrailingSlash(str) {
+  if (str.endsWith('/')) {
+    return str.slice(0, -1); 
+  }
+  return str; 
+}
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
@@ -73,8 +80,26 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user, newStory) {
+    const url = `https://hack-or-snooze-v3.herokuapp.com/stories`;
+    const postData = {
+      "token": user.loginToken,
+      "story": {
+        "author": newStory.author,
+        "title": newStory.title,
+        "url": newStory.url
+      }
+    }
+    const resp = await axios.post(url, postData);
+
+    const addedStory = new Story(resp.data);
+    
+    this.stories.push(addedStory);
+    return addedStory
+  }
+  removeStory(storyIdToRemove) {
+    // Filter out the story to remove from the stories array
+    this.stories = this.stories.filter(story => story.storyId !== storyIdToRemove);
   }
 }
 
@@ -107,6 +132,21 @@ class User {
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
+  }
+
+  async getCurrentUser(){
+
+
+  }
+
+  async updateStories(){
+    const url = `https://hack-or-snooze-v3.herokuapp.com/users/${this.username}?token=${this.loginToken}`;
+    const resp = await axios.get(url);
+    const stories = resp.data.user.stories
+    this.ownStories ={}
+    this.ownStories = stories.map(s => new Story(s));
+
+
   }
 
   /** Register new user in API, make User instance & return it.

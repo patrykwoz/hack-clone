@@ -109,8 +109,72 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
+  hidePageComponents();
 
-  $allStoriesList.show();
+  putStoriesOnPage();
+
 
   updateNavOnLogin();
+}
+
+
+async function addFavorite(storyId){
+  const userName = currentUser.username;
+  const userLoginToken =currentUser.loginToken;
+  const url = `https://hack-or-snooze-v3.herokuapp.com/users/${userName}/favorites/${storyId}`
+  const postData = {
+    "token": userLoginToken
+  }
+  const resp = await axios.post(url, postData);
+  currentUser.favorites ={};
+  currentUser.favorites = resp.data.user.favorites;
+}
+
+
+async function removeFavorite(storyId) {
+  const userName = currentUser.username;
+  const userLoginToken = currentUser.loginToken;
+  const url = `https://hack-or-snooze-v3.herokuapp.com/users/${userName}/favorites/${storyId}`;
+  const requestData = {
+    token: userLoginToken,
+  };
+
+  try {
+    const resp = await axios.delete(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: requestData,
+    });
+    currentUser.favorites ={};
+    currentUser.favorites = resp.data.user.favorites;
+  } catch (error) {
+    console.error('Error deleting favorite:', error);
+  }
+}
+
+
+async function removeOwnStory(storyId){
+  const userName = currentUser.username;
+  const userLoginToken = currentUser.loginToken;
+  const url = `https://hack-or-snooze-v3.herokuapp.com/stories/${storyId}`;
+  const requestData = {
+    token: userLoginToken,
+  };
+
+  try {
+    const resp = await axios.delete(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: requestData,
+    });
+    await currentUser.updateStories()
+  } catch (error) {
+    console.error('Error deleting favorite:', error);
+  }
+
+
+
+
 }

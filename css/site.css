@@ -106,6 +106,10 @@ form > hr {
   width: 70px;
 }
 
+span.star:hover {
+  cursor: pointer;
+}
+
 
 /* responsive queries for tightening things up for mobile. */
 
