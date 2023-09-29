@@ -9,6 +9,7 @@ let storyList;
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
+  $storiesContainer.show();
 
   putStoriesOnPage();
 }
@@ -23,21 +24,30 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
-
   const hostName = story.getHostName();
   const starClass = returnStarClass(story);
+  const editStoryBtn = returnEditBtn(story);
   return $(`
       <li id="${story.storyId}">
-      <span class="trash-can hidden"><i class="fas fa-trash-alt"></i></span>
-        <span class="star hidden"><i class="${starClass} fa-star"></i></span>
-        <a href="${story.url}" target="a_blank" class="story-link">
-          ${story.title}
-        </a>
-        <small class="story-hostname">(${hostName})</small>
-        <small class="story-author">by ${story.author}</small>
-        <small class="story-user">posted by ${story.username}</small>
+        <div>
+              
+          <span class="trash-can hidden"><i class="fas fa-trash-alt"></i></span>
+          <span class="star hidden"><i class="${starClass} fa-star"></i></span>
+          <div>
+            <div>
+              <a href="${story.url}" target="a_blank" class="story-link">
+                ${story.title}
+              </a>
+              <small class="story-hostname">(${hostName})</small>
+              ${editStoryBtn}
+            </div>
+            <small class="story-author">by ${story.author}</small>
+            <small class="story-user">posted by ${story.username}</small>
+          </div>
+        </div>
+        <hr>
       </li>
+      
     `);
 }
 
@@ -65,7 +75,7 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
+  $storiesContainer.show();
   $allStoriesList.show();
   showStars();
 }
@@ -84,6 +94,7 @@ function putFavoritesOnPage() {
 
   $allStoriesList.show();
   showStars();
+  $warningMessages.hide();
 }
 
 function putUserStoriesOnPage() {
@@ -108,19 +119,39 @@ $storyForm.on('submit', handleSubmitStory)
 
 async function handleSubmitStory(evt){
   evt.preventDefault();
-  console.log(evt.target)
   const author = $("#story-author").val();
   const title = $("#story-title").val();
   const url = $("#story-url").val();
 
   const newStory = {author, title, url};
-  console.log(newStory);
   await storyList.addStory(currentUser, newStory);
   await currentUser.updateStories();
   await getAndShowStoriesOnStart();
+  $storyForm.hide();
+
 }
 
+$storyEditForm.on('submit', handleEditStory)
+
+async function handleEditStory(evt) {
+  evt.preventDefault();
+  const id = $("#edit-story-story-id").val();
+  const author = $("#edit-story-author").val();
+  const title = $("#edit-story-title").val();
+  const url = $("#edit-story-url").val();
+
+  const editedStory = {author, title, url};
+  await storyList.editStory(currentUser, id, editedStory);
+  await currentUser.updateStories();
+  await getAndShowStoriesOnStart();
+  $storyEditForm.hide();
+}
+
+
 function returnStarClass(story){
+  if (!currentUser){
+    return 'far'
+  }
   const filteredArr = currentUser.favorites.filter(item => item.storyId === story.storyId);
   if (filteredArr.length>0){
     return 'fas'
@@ -146,11 +177,32 @@ function showTrashCans(){
   }
 }
 
+function returnEditBtn(story){
+  if (!currentUser){
+    return ''
+  }
+  const filteredArr = currentUser.ownStories.filter(item => item.storyId === story.storyId);
+  if (filteredArr.length>0){
+    return '<button class="edit-story-btn">Edit</button>';
+  } else{
+    return '';
+  }
+}
+
+function showEditButtons(){
+  if(currentUser){
+    $('.edit-story-btn').show();
+  }else{
+    return
+  }
+}
+
 
 $allStoriesList.on('click','span.star', handleStarClick)
 
 async function handleStarClick(e){
-  const clickedId = e.target.parentElement.parentElement.id;
+
+  const clickedId = e.target.parentElement.parentElement.parentElement.id;
   const filteredArr = currentUser.favorites.filter(item => item.storyId === clickedId);
   let myStar = $(e.target).get()[0];
 
@@ -170,12 +222,10 @@ async function handleStarClick(e){
 $allStoriesList.on('click','span.trash-can', handleTrashClick)
 
 async function handleTrashClick(e){
-  const clickedTrash = e.target.parentElement.parentElement;
-  const clickedId = clickedTrash.id
+  const clickedTrash = e.target.closest('li')
+  const clickedId = clickedTrash.id;
   
   await removeOwnStory(clickedId);
   storyList.removeStory(clickedId);
   clickedTrash.remove();
-
-
 }

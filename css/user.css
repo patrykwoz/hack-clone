@@ -12,3 +12,14 @@
 .account-forms-container {
   padding-left: 20px;
 }
+
+
+#edit-username{
+  color: grey;
+  border: 2px solid rgb(206, 206, 206);
+  background-color: rgb(211, 211, 211);
+}
+
+#edit-username:focus{
+  outline: none;
+}

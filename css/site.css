@@ -3,6 +3,9 @@
 body {
   font-family: Arimo, sans-serif;
   margin: 8px 7.5vw;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, rgba(119, 0, 119, 0.4), rgba(0, 81, 255, 0.4));
+  background-size: 100% 100%;
 }
 
 h1 {
@@ -38,6 +41,7 @@ a:hover {
   flex-direction: column;
   align-self: center;
   background-color: #f6f6ef;
+  margin-bottom: 3rem;
 }
 
 .hidden {
@@ -108,8 +112,49 @@ form > hr {
 
 span.star:hover {
   cursor: pointer;
+  display: inline;
+  color: orange;
 }
 
+span.trash-can:hover {
+  cursor: pointer;
+  color: red;
+  display: inline;
+}
+
+button.edit-story-btn {
+  color: grey;
+  border: 2px solid grey;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0);
+  font-size: smaller;
+  font-weight: bold;
+
+}
+
+button.edit-story-btn:hover {
+  cursor: pointer;
+  color: orange;
+  border: 2px solid orange;
+  
+}
+
+hr {
+  /* border: 0.01rem solid rgb(187, 187, 187); */
+
+  border: none; 
+  height: 1px; 
+  background-color: #b4b4b4;
+  margin: 10px 0; 
+}
+
+.warning-message{
+  margin: 1rem 0 0 0;
+  padding: 0.5rem;
+  color: red;
+  font-size: small;
+  font-weight: bolder;
+}
 
 /* responsive queries for tightening things up for mobile. */
 

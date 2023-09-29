@@ -64,6 +64,28 @@ function logout(evt) {
 
 $navLogOut.on("click", logout);
 
+
+async function updateUser(evt){
+  evt.preventDefault();
+  // grab the username and password
+  const nameUser = $("#edit-name").val();
+  const password = $("#edit-password").val();
+
+  // User.login retrieves user info from API and returns User instance
+  // which we'll make the globally-available, logged-in user.
+  const token =currentUser.loginToken
+  const userName = currentUser.username
+  currentUser = await User.updateUser(token, userName, nameUser, password);
+
+  $editUserForm.trigger("reset");
+
+  saveUserCredentialsInLocalStorage();
+  updateUIOnUserLogin();
+
+}
+
+$editUserForm.on('submit', updateUser);
+
 /******************************************************************************
  * Storing/recalling previously-logged-in-user with localStorage
  */
@@ -112,6 +134,7 @@ function updateUIOnUserLogin() {
   hidePageComponents();
 
   putStoriesOnPage();
+  $storiesContainer.show();
 
 
   updateNavOnLogin();
@@ -155,26 +178,17 @@ async function removeFavorite(storyId) {
 
 
 async function removeOwnStory(storyId){
-  const userName = currentUser.username;
   const userLoginToken = currentUser.loginToken;
-  const url = `https://hack-or-snooze-v3.herokuapp.com/stories/${storyId}`;
-  const requestData = {
-    token: userLoginToken,
-  };
-
+  const url = `https://hack-or-snooze-v3.herokuapp.com`;
   try {
-    const resp = await axios.delete(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: requestData,
+    const response = await axios({
+      url: `${url}/stories/${storyId}`,
+      method: "DELETE",
+      data: { token:userLoginToken},
     });
     await currentUser.updateStories()
   } catch (error) {
     console.error('Error deleting favorite:', error);
   }
-
-
-
-
 }
+

@@ -97,11 +97,39 @@ class StoryList {
     this.stories.push(addedStory);
     return addedStory
   }
+
+  async editStory(user, storyId, editedStory) {
+    const url = `https://hack-or-snooze-v3.herokuapp.com/stories/${storyId}`;
+    const postData = {
+      "token": user.loginToken,
+      "story": {
+        "author": editedStory.author,
+        "title": editedStory.title,
+        "url": editedStory.url
+      }
+    }
+    const resp = await axios.patch(url, postData);
+    const index = this.stories.findIndex(story => story.storyId === storyId);
+
+    if (index !== -1) {
+      // Update the story with the new data
+      this.stories[index] = new Story(resp.data);
+      return this.stories[index];
+    }
+  }
+
+
+
+
+
+
   removeStory(storyIdToRemove) {
     // Filter out the story to remove from the stories array
     this.stories = this.stories.filter(story => story.storyId !== storyIdToRemove);
   }
 }
+
+
 
 
 /******************************************************************************
@@ -157,25 +185,39 @@ class User {
    */
 
   static async signup(username, password, name) {
-    const response = await axios({
-      url: `${BASE_URL}/signup`,
-      method: "POST",
-      data: { user: { username, password, name } },
-    });
+    const self = this;
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/signup`,
+        method: "POST",
+        data: { user: { username, password, name } },
+      });
+  
 
-    let { user } = response.data
+      let { user } = response.data;
+      return new User(
+        {
+          username: user.username,
+          name: user.name,
+          createdAt: user.createdAt,
+          favorites: user.favorites,
+          ownStories: user.stories,
+        },
+        response.data.token
+      );
 
-    return new User(
-      {
-        username: user.username,
-        name: user.name,
-        createdAt: user.createdAt,
-        favorites: user.favorites,
-        ownStories: user.stories
-      },
-      response.data.token
-    );
+    } catch (error) {
+      const errorStatus = error.response.data.error.status;
+      if (errorStatus === 409){
+        console.log('error status is 409')
+        addUserTakenWarning(error.response.data.error.message);
+
+      }
+      throw new Error(`An error occured: ${error.response.data.error.message}`);
+    }
   }
+  
+
 
   /** Login in user with API, make User instance & return it.
 
@@ -203,6 +245,35 @@ class User {
       response.data.token
     );
   }
+
+  static async updateUser(tokenUser, username, name, password) {
+    const response = await axios({
+      url: `${BASE_URL}/users/${username}`,
+      method: "PATCH",
+      data: { token:tokenUser, user: { name, password } },
+    });
+
+    let { user } = response.data;
+
+    return new User(
+      {
+        username: user.username,
+        name: user.name,
+        createdAt: user.createdAt,
+        favorites: user.favorites,
+        ownStories: user.stories
+      },
+      response.data.token
+    );
+  }
+
+
+
+
+
+
+
+
 
   /** When we already have credentials (token & username) for a user,
    *   we can log them in automatically. This function does that.
@@ -233,4 +304,10 @@ class User {
       return null;
     }
   }
+}
+
+
+function addUserTakenWarning(warning) {
+  const warningElement = $(`<div class="warning-message">${warning}</div>`)
+  $("#signup-username").parent().append(warningElement);
 }

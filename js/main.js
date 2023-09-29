@@ -7,10 +7,16 @@ const $body = $("body");
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
 
+const $storiesContainer = $("section.stories-container");
+
 const $storyForm = $('#submit-story-form');
+const $storyEditForm = $('#edit-story-form');
+
+const $storyEditBtn = $('.edit-story-btn');
 
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
+const $editUserForm = $('#edit-user-form');
 
 const $navNewStory = $('#nav-new-story'); 
 const $navFavorites = $('#nav-favorites');
@@ -20,6 +26,8 @@ const $navMyStories = $('#nav-my-stories');
 const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
+
+const $warningMessages = $('div.warning-message');
 
 
 
@@ -33,7 +41,10 @@ function hidePageComponents() {
     $allStoriesList,
     $loginForm,
     $signupForm,
-    $storyForm
+    $editUserForm,
+    $storyForm,
+    $warningMessages,
+    $storyEditForm
   ];
   components.forEach(c => c.hide());
 }
@@ -45,6 +56,7 @@ async function start() {
 
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
+  $storiesContainer.show();
   await getAndShowStoriesOnStart();
 
   // if we got a logged-in user

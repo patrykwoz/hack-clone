@@ -56,6 +56,34 @@
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
+  <!-- Edit story form -->
+  <form 
+  action="#"
+  id="edit-story-form"
+  class="edit-story-form hidden"
+  method="patch"
+  >
+  <h4>Edit Your Story</h4>
+  <div class="edit-story-input">
+    <label for="edit-story-story-id">story ID</label>
+    <input type="text" name="" id="edit-story-story-id" readonly>
+  </div>
+  <div class="edit-story-input">
+    <label for="edit-story-author">author</label>
+    <input type="text" name="" id="edit-story-author" placeholder="author name" required>
+  </div>
+  <div class="edit-story-input">
+    <label for="edit-story-title">title</label>
+    <input type="text" name="" id="edit-story-title" placeholder="story title" required>
+  </div>
+  <div class="edit-story-input">
+    <label for="edit-story-title">url</label>
+    <input type="url" id="edit-story-url" placeholder="story url" required>
+  </div>
+  <button type="submit" id="edit-story-btn">submit</button>
+  <hr>
+  </form>
+
   <!-- Submit story form -->
   <form 
   action="#"
@@ -66,17 +94,18 @@
   <h4>Submit New Story</h4>
   <div class="submit-story-input">
     <label for="story-author">author</label>
-    <input type="text" name="" id="story-author" placeholder="author name">
+    <input type="text" name="" id="story-author" placeholder="author name" required>
   </div>
   <div class="submit-story-input">
     <label for="story-title">title</label>
-    <input type="text" name="" id="story-title" placeholder="story title">
+    <input type="text" name="" id="story-title" placeholder="story title" required>
   </div>
   <div class="submit-story-input">
     <label for="story-title">url</label>
-    <input type="url" id="story-url" placeholder="story url">
+    <input type="url" id="story-url" placeholder="story url" required>
   </div>
-  <button type="submit">submit</button>
+  <button type="submit" id="submit-story-btn">submit</button>
+  <hr>
   </form>
 
   <!-- loading message (removed by JS after stories loaded) -->
@@ -95,11 +124,11 @@
     <h4>Login</h4>
     <div class="login-input">
       <label for="login-username">username</label>
-      <input id="login-username" autocomplete="current-username">
+      <input id="login-username" autocomplete="current-username" required>
     </div>
     <div class="login-input">
       <label for="login-password">password</label>
-      <input id="login-password" type="password" autocomplete="current-password">
+      <input id="login-password" type="password" autocomplete="current-password" required>
     </div>
     <button type="submit">login</button>
     <hr>
@@ -118,14 +147,41 @@
     </div>
     <div class="login-input">
       <label for="signup-username">username</label>
-      <input id="signup-username" autocomplete="new-username">
+      <input id="signup-username" autocomplete="new-username" required>
     </div>
     <div class="login-input">
       <label for="signup-password">password</label>
-      <input id="signup-password" autocomplete="new-password" type="password">
+      <input id="signup-password" autocomplete="new-password" type="password" required>
     </div>
     <button type="submit">create account</button>
   </form>
+
+    <!-- Edit User Form (User Profile) -->
+  <form
+      action="#"
+      id="edit-user-form"
+      class="account-form hidden"
+      method="patch">
+    <h4>Edit User Profile</h4>
+    <div class="login-input">
+      <label for="edit-name">name</label>
+      <input id="edit-name" autocapitalize="words">
+    </div>
+    <div class="login-input">
+      <label for="edit-username">username</label>
+      <input id="edit-username" autocomplete="new-username" readonly>
+    </div>
+    <div class="login-input">
+      <label for="edit-password">password</label>
+      <input id="edit-password" autocomplete="new-password" type="password" required>
+    </div>
+    <button type="submit">submit</button>
+  </form>
+
+
+
+
+
 </section>
 
 <!-- Library JS & our JS -->

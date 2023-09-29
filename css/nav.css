@@ -4,12 +4,13 @@ nav {
   display: flex;
   background-color: #ff6600;
   align-items: center;
-  padding: 5px 20px;
+  padding: 1.5rem 20px 1.5rem 20px;
   border-radius: 3px 3px 0 0;
 }
 
 .navbar-brand {
   font-weight: bold;
+  margin: 0 10px 0 3px;
 }
 
 .nav-link {

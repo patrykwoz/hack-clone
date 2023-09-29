@@ -28,12 +28,38 @@
 
 .story-link:hover {
   text-decoration: none;
+  display: inline;
 }
 
 .story-author {
-  margin-left: 2em;
+  /* margin-left: 2em; */
+  padding: 0.3rem 0 0.3rem 0;
+  color: green;
+  font-weight: bold;
+  display: block;
 }
 
 .story-user {
   display: block;
+  color: orange;
+}
+
+.story-url {
+  display: inline;
+
+}
+
+#all-stories-list > li > div{
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  padding: 0.3rem 0 0.5rem 0;
+}
+
+#all-stories-list > li > div > div{
+  margin-left: 0.3rem;
+}
+
+#all-stories-list li:last-child >hr{
+  display: none;
 }
